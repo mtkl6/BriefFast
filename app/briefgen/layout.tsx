@@ -28,7 +28,7 @@ export default function BriefGenLayout({ children }: { children: ReactNode }) {
                   </div>
                 </div>
               </div>
-              <span className="text-xl font-bold">BriefFa.st</span>
+              <span className="text-xl font-bold">BriefFast</span>
             </div>
           </Link>
           <nav className="flex gap-6">
@@ -47,7 +47,7 @@ export default function BriefGenLayout({ children }: { children: ReactNode }) {
       <footer className="border-t border-zinc-800 py-6">
         <div className="container mx-auto px-6 text-center">
           <div className="text-zinc-500 text-sm mb-2">
-            © {new Date().getFullYear()} BriefFa.st
+            © {new Date().getFullYear()} BriefFast
           </div>
           <div className="flex justify-center space-x-4 text-xs text-zinc-500">
             <Link href="/tos" className="hover:text-zinc-300 transition-colors">

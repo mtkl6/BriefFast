@@ -30,7 +30,7 @@ export default function TOS(): React.ReactElement {
                 </div>
               </div>
             </div>
-            <span className="text-xl font-bold">BriefFa.st</span>
+            <span className="text-xl font-bold">BriefFast</span>
           </div>
           <nav className="flex gap-6">
             <Link
@@ -95,10 +95,10 @@ export default function TOS(): React.ReactElement {
               <strong>
                 Internet address:{" "}
                 <a
-                  href="http://brieffa.st/"
+                  href="http://brieffast.com/"
                   className="text-yellow-400 hover:text-yellow-300"
                 >
-                  brieffa.st
+                  brieffast.com
                 </a>
               </strong>
             </p>
@@ -109,7 +109,7 @@ export default function TOS(): React.ReactElement {
       <footer className="border-t border-zinc-800 py-6">
         <div className="container mx-auto px-6 text-center">
           <div className="text-zinc-500 text-sm mb-2">
-            © {new Date().getFullYear()} BriefFa.st
+            © {new Date().getFullYear()} BriefFast
           </div>
           <div className="flex justify-center space-x-4 text-xs text-zinc-500">
             <Link href="/tos" className="hover:text-zinc-300 transition-colors">

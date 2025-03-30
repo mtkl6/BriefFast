@@ -23,7 +23,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <span className="text-xl font-bold">BriefFa.st</span>
+            <span className="text-xl font-bold">BriefFast</span>
           </div>
           <nav className="flex gap-6">
             <Link
@@ -46,7 +46,7 @@ export default function Home() {
             </h1>
 
             <p className="text-lg text-zinc-400 mb-8 max-w-2xl">
-              The BriefFa.st boilerplate with all you need to build your project
+              The BriefFast boilerplate with all you need to build your project
               brief. Generate structured, detailed project briefings in minutes.
             </p>
 
@@ -55,10 +55,10 @@ export default function Home() {
                 href="/briefgen"
                 className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 px-8 rounded-lg transition-colors text-lg inline-flex items-center justify-center"
               >
-                <span className="mr-2">⚡</span> Get BriefFa.st
+                <span className="mr-2">⚡</span> Get Brieffast
               </Link>
               <div className="text-yellow-500 text-sm flex items-center sm:ml-4">
-                BriefFa.st is still a demo
+                Brieffast is still a demo
               </div>
             </div>
           </div>
@@ -68,7 +68,7 @@ export default function Home() {
       <footer className="border-t border-zinc-800 py-6">
         <div className="container mx-auto px-6 text-center">
           <div className="text-zinc-500 text-sm mb-2">
-            © {new Date().getFullYear()} BriefFa.st
+            © {new Date().getFullYear()} Brieffast
           </div>
           <div className="flex justify-center space-x-4 text-xs text-zinc-500">
             <Link href="/tos" className="hover:text-zinc-300 transition-colors">

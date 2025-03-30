@@ -30,7 +30,7 @@ export default function TOS(): React.ReactElement {
                 </div>
               </div>
             </div>
-            <span className="text-xl font-bold">BriefFa.st</span>
+            <span className="text-xl font-bold">BriefFast</span>
           </div>
           <nav className="flex gap-6">
             <Link
@@ -71,7 +71,7 @@ export default function TOS(): React.ReactElement {
             {`Last Updated: March 22, 2025
 
 1.	Acceptance of Terms
-By accessing or using Brieffast (https://brieffa.st), you agree to be bound by these Terms & Services and our Privacy Policy.
+By accessing or using Brieffast (https://brieffast.com), you agree to be bound by these Terms & Services and our Privacy Policy.
 	2.	Description of Service
 Brieffast is a free platform that allows their users to create a brieffing document by answering a few questions in their templates.
 	3.	Data Collection and Privacy
@@ -113,7 +113,7 @@ This agreement was last modified on March 22, 2025.`}
       <footer className="border-t border-zinc-800 py-6">
         <div className="container mx-auto px-6 text-center">
           <div className="text-zinc-500 text-sm mb-2">
-            © {new Date().getFullYear()} BriefFa.st
+            © {new Date().getFullYear()} BriefFast
           </div>
           <div className="flex justify-center space-x-4 text-xs text-zinc-500">
             <Link href="/tos" className="hover:text-zinc-300 transition-colors">

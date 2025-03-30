@@ -8,7 +8,7 @@
 
 ## 1. Overview
 
-**BriefFa.st** is a Software-as-a-Service (SaaS) platform designed to help freelancers, agencies, and businesses quickly generate structured, detailed project briefings. By walking the user through a guided questionnaire, the system automatically formats the responses into a polished briefing document in Markdown, which can be easily shared or exported.
+**Brieffast** is a Software-as-a-Service (SaaS) platform designed to help freelancers, agencies, and businesses quickly generate structured, detailed project briefings. By walking the user through a guided questionnaire, the system automatically formats the responses into a polished briefing document in Markdown, which can be easily shared or exported.
 
 ### 1.1 Key Features
 
@@ -433,4 +433,3 @@ Below is a proposed minimal file structure for the Next.js 15 application with D
 This PRD outlines the vision, requirements, and implementation details for BriefFa.st, ensuring a common understanding across the development team. By adhering to the minimal file structure and following best practices in Next.js, Drizzle ORM, and Tailwind CSS, we aim to ship a streamlined product that meets the needs of freelancers, agencies, and enterprise clients.
 
 _End of Document_
-

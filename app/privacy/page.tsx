@@ -30,7 +30,7 @@ export default function PrivacyPolicy(): React.ReactElement {
                 </div>
               </div>
             </div>
-            <span className="text-xl font-bold">BriefFa.st</span>
+            <span className="text-xl font-bold">BriefFast</span>
           </div>
           <nav className="flex gap-6">
             <Link
@@ -71,7 +71,7 @@ export default function PrivacyPolicy(): React.ReactElement {
             {`Last Updated: March 22, 2025
 
 1. Introduction
-Welcome to Brieffast (https://brieffa.st). We are committed to protecting your privacy and ensuring the security of your personal information.
+Welcome to Brieffast (https://brieffast.com). We are committed to protecting your privacy and ensuring the security of your personal information.
 
 2. Information We Collect
 	•	Non-Personal Data: We use cookies and similar technologies to improve your experience and analyze website usage.
@@ -109,7 +109,7 @@ This policy is effective as of March 22, 2025`}
       <footer className="border-t border-zinc-800 py-6">
         <div className="container mx-auto px-6 text-center">
           <div className="text-zinc-500 text-sm mb-2">
-            © {new Date().getFullYear()} BriefFa.st
+            © {new Date().getFullYear()} BriefFast
           </div>
           <div className="flex justify-center space-x-4 text-xs text-zinc-500">
             <Link href="/tos" className="hover:text-zinc-300 transition-colors">
