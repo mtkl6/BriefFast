@@ -6,7 +6,23 @@ export default function Home() {
       <header className="border-b border-zinc-800">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center">
-            <span className="text-yellow-400 mr-2">⚡</span>
+            <div className="w-6 h-6 mr-2">
+              <div className="w-full h-full bg-[#FFF95B] rounded-md flex items-center justify-center">
+                <div className="w-[85%] h-[85%] flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    className="w-full h-full fill-[#E9E3E3] stroke-[#141414] stroke-[1px]"
+                    role="img"
+                  >
+                    <title>Document icon</title>
+                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <path d="m9 15 2 2 4-4" />
+                  </svg>
+                </div>
+              </div>
+            </div>
             <span className="text-xl font-bold">BriefFa.st</span>
           </div>
           <nav className="flex gap-6">
@@ -16,12 +32,6 @@ export default function Home() {
             >
               Templates
             </Link>
-            <Link
-              href="#"
-              className="text-zinc-400 hover:text-white transition-colors"
-            >
-              Pricing
-            </Link>
           </nav>
         </div>
       </header>
@@ -29,13 +39,6 @@ export default function Home() {
       <main className="flex-grow flex items-center">
         <div className="container mx-auto px-6 py-16">
           <div className="max-w-3xl mx-auto">
-            <div className="flex items-center mb-6">
-              <div className="bg-zinc-800 rounded-full px-3 py-1 text-sm text-zinc-400 flex items-center">
-                <span className="mr-2">Product of the day</span>
-                <span className="text-yellow-400 font-semibold">2nd</span>
-              </div>
-            </div>
-
             <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight">
               Create your brief <br />
               in <span className="text-white">days</span>,{" "}
@@ -54,28 +57,8 @@ export default function Home() {
               >
                 <span className="mr-2">⚡</span> Get BriefFa.st
               </Link>
-              <div className="text-zinc-500 text-sm flex items-center sm:ml-4">
-                Free for personal use
-              </div>
-            </div>
-
-            <div className="flex items-center">
-              <div className="flex -space-x-2">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div
-                    key={i}
-                    className="w-8 h-8 rounded-full bg-zinc-700 border-2 border-zinc-900 flex items-center justify-center text-xs"
-                  >
-                    {i}
-                  </div>
-                ))}
-              </div>
-              <div className="ml-4 flex items-center">
-                <span className="text-yellow-400">★★★★★</span>
-                <span className="ml-2 text-zinc-400">
-                  <span className="font-semibold">500+</span> users create
-                  briefs faster
-                </span>
+              <div className="text-yellow-500 text-sm flex items-center sm:ml-4">
+                BriefFa.st is still a demo
               </div>
             </div>
           </div>
@@ -83,8 +66,21 @@ export default function Home() {
       </main>
 
       <footer className="border-t border-zinc-800 py-6">
-        <div className="container mx-auto px-6 text-center text-zinc-500 text-sm">
-          © {new Date().getFullYear()} BriefFa.st
+        <div className="container mx-auto px-6 text-center">
+          <div className="text-zinc-500 text-sm mb-2">
+            © {new Date().getFullYear()} BriefFa.st
+          </div>
+          <div className="flex justify-center space-x-4 text-xs text-zinc-500">
+            <Link href="/tos" className="hover:text-zinc-300 transition-colors">
+              Terms of Service
+            </Link>
+            <Link
+              href="/privacy"
+              className="hover:text-zinc-300 transition-colors"
+            >
+              Privacy Policy
+            </Link>
+          </div>
         </div>
       </footer>
     </div>

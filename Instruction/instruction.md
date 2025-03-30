@@ -85,7 +85,7 @@
      - Example placeholders: `## {ProjectName}`, `### Requirements: {RequirementsList}`, etc.
   2. **Editable Preview:**
      - Users can view the formatted Markdown and make final edits.
-  3. **Structured JSON Output:**
+  3. **Structured JSON Output:** LATER
      - The system should also produce a JSON version for possible API integrations.
 
 - **Example Markdown Snippet:**
@@ -433,3 +433,4 @@ Below is a proposed minimal file structure for the Next.js 15 application with D
 This PRD outlines the vision, requirements, and implementation details for BriefFa.st, ensuring a common understanding across the development team. By adhering to the minimal file structure and following best practices in Next.js, Drizzle ORM, and Tailwind CSS, we aim to ship a streamlined product that meets the needs of freelancers, agencies, and enterprise clients.
 
 _End of Document_
+

@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getTemplateById } from "@/lib/data/templates";
+import { getQuestionnaireByTemplateId } from "@/lib/data/questionnaire";
 import { Button } from "@/components/ui/button";
+import QuestionnaireForm from "@/components/questionnaire/QuestionnaireForm";
 
 export async function generateMetadata({
   params,
@@ -38,6 +40,9 @@ export default async function CreateBriefPage({
   if (!template) {
     notFound();
   }
+
+  // Get the questionnaire for this template
+  const questionnaire = getQuestionnaireByTemplateId(templateId);
 
   return (
     <div className="container mx-auto px-6 py-8">
@@ -79,26 +84,33 @@ export default async function CreateBriefPage({
           </h1>
         </div>
 
-        <div className="bg-zinc-800 border border-zinc-700 rounded-lg p-8 mb-8">
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-semibold mb-4 text-white">
-              Questionnaire Coming Soon
-            </h2>
-            <p className="text-zinc-400 max-w-md mx-auto mb-6">
-              We&apos;re currently building the questionnaire for this template.
-              Check back soon or try one of our other templates.
-            </p>
-            <Button
-              variant="default"
-              className="bg-yellow-400 hover:bg-yellow-500 text-black"
-              asChild
-            >
-              <Link href="/briefgen" className="inline-flex items-center">
-                <span className="mr-2">⚡</span> Browse Other Templates
-              </Link>
-            </Button>
+        {questionnaire ? (
+          <QuestionnaireForm
+            questionnaire={questionnaire}
+            templateId={templateId}
+          />
+        ) : (
+          <div className="bg-zinc-800 border border-zinc-700 rounded-lg p-8 mb-8">
+            <div className="text-center py-12">
+              <h2 className="text-2xl font-semibold mb-4 text-white">
+                Questionnaire Coming Soon
+              </h2>
+              <p className="text-zinc-400 max-w-md mx-auto mb-6">
+                We&apos;re currently building the questionnaire for this
+                template. Check back soon or try one of our other templates.
+              </p>
+              <Button
+                variant="default"
+                className="bg-yellow-400 hover:bg-yellow-500 text-black"
+                asChild
+              >
+                <Link href="/briefgen" className="inline-flex items-center">
+                  <span className="mr-2">⚡</span> Browse Other Templates
+                </Link>
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
