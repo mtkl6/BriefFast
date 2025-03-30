@@ -32,6 +32,12 @@ export default function Home() {
             >
               Templates
             </Link>
+            <Link
+              href="/changelog"
+              className="text-zinc-400 hover:text-white transition-colors"
+            >
+              Changelog
+            </Link>
           </nav>
         </div>
       </header>

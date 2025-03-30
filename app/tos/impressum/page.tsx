@@ -40,10 +40,10 @@ export default function TOS(): React.ReactElement {
               Templates
             </Link>
             <Link
-              href="#"
+              href="/changelog"
               className="text-zinc-400 hover:text-white transition-colors"
             >
-              Pricing
+              Changelog
             </Link>
           </nav>
         </div>
