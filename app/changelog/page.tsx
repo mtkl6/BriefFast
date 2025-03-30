@@ -1,12 +1,7 @@
-import { ReactNode } from "react";
+import { ChangelogSection } from "@/components/changelog/ChangelogSection";
 import Link from "next/link";
 
-export const metadata = {
-  title: "BriefFast - Create Your Brief",
-  description: "Generate detailed project briefings quickly and easily",
-};
-
-export default function BriefGenLayout({ children }: { children: ReactNode }) {
+export default async function ChangelogPage() {
   return (
     <div className="min-h-screen flex flex-col bg-zinc-900 text-white">
       <header className="border-b border-zinc-800">
@@ -20,7 +15,9 @@ export default function BriefGenLayout({ children }: { children: ReactNode }) {
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       className="w-full h-full fill-[#E9E3E3] stroke-[#141414] stroke-[1px]"
+                      role="img"
                     >
+                      <title>Document icon</title>
                       <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
                       <polyline points="14 2 14 8 20 8" />
                       <path d="m9 15 2 2 4-4" />
@@ -38,17 +35,36 @@ export default function BriefGenLayout({ children }: { children: ReactNode }) {
             >
               Templates
             </Link>
-            <Link
-              href="/changelog"
-              className="text-zinc-400 hover:text-white transition-colors"
-            >
-              Changelog
-            </Link>
           </nav>
         </div>
       </header>
 
-      <main className="flex-grow">{children}</main>
+      <main className="flex-grow container mx-auto px-6 py-8">
+        <div className="max-w-3xl mx-auto">
+          <div className="mb-10 text-center">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">Changelog</h1>
+            <p className="text-zinc-400">
+              What&apos;s new in the latest version of BriefFast
+            </p>
+          </div>
+          <ChangelogSection
+            items={[
+              {
+                date: "2025-03-30",
+                changes: ["🚀 Launch of BriefFast"],
+              },
+              {
+                date: "2025-03-29",
+                changes: [
+                  "✨ Added 5 new templates for tech solopreneurs",
+                  "🧩 Improved questionnaire navigation",
+                  "🔧 Fixed various UI issues",
+                ],
+              },
+            ]}
+          />
+        </div>
+      </main>
 
       <footer className="border-t border-zinc-800 py-6">
         <div className="container mx-auto px-6 text-center">
