@@ -1,15 +1,10 @@
-import { pgTable, uuid, text, jsonb, timestamp } from "drizzle-orm/pg-core";
-import { drizzle } from "drizzle-orm/node-postgres";
-import type { NodePgDatabase } from "drizzle-orm/node-postgres";
-import { eq, sql } from "drizzle-orm";
-import { Pool } from "pg";
-import { neon } from "@neondatabase/serverless";
+import { createClient, type RedisClientType } from "redis";
 import "dotenv/config";
 
 // Define the type for the briefing data
 export type BriefingData = Record<string, unknown>;
 
-// Define the briefing record type based on our schema
+// Define the briefing record type
 export type Briefing = {
   id: string;
   category: string;
@@ -18,36 +13,29 @@ export type Briefing = {
   updatedAt: Date;
 };
 
-// Check if we're in a production environment
-const isProduction = process.env.NODE_ENV === "production";
+// Check if we have a Redis URL, default to localhost if not provided
+const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 
-// Use the appropriate connection method based on environment
-let db: NodePgDatabase;
+// Initialize the Redis client
+let redisClient: RedisClientType;
 
-if (isProduction) {
-  // In production, use the Neon serverless driver
-  const neonClient = neon(process.env.DATABASE_URL ?? "");
-  // There's a type mismatch between Neon and Drizzle but it works at runtime
-  // Using unknown as an intermediate step is safer than 'any'
-  db = drizzle(neonClient as unknown as Pool);
-} else {
-  // In development, use the standard pg Pool
-  const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-  });
-  db = drizzle(pool);
-}
+const getRedisClient = async () => {
+  if (!redisClient) {
+    redisClient = createClient({ url: REDIS_URL });
 
-// Define the briefings table schema as described in section 5.3
-export const briefings = pgTable("briefings", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  category: text("category").notNull(),
-  data: jsonb("data").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+    // Set up event handlers
+    redisClient.on("error", (err) => {
+      console.error("Redis Client Error", err);
+    });
 
-// Helper functions for common operations
+    // Connect to Redis
+    if (!redisClient.isOpen) {
+      await redisClient.connect();
+    }
+  }
+
+  return redisClient;
+};
 
 /**
  * Create a new briefing
@@ -59,15 +47,45 @@ export async function createBriefing(
   category: string,
   data: BriefingData
 ): Promise<Briefing | null> {
-  const result = await db
-    .insert(briefings)
-    .values({
+  try {
+    const client = await getRedisClient();
+
+    // Generate a UUID for the new briefing
+    const id = crypto.randomUUID();
+    const now = new Date();
+
+    // Create the briefing object
+    const briefing: Briefing = {
+      id,
       category,
       data,
-    })
-    .returning();
+      createdAt: now,
+      updatedAt: now,
+    };
 
-  return (result[0] as Briefing | undefined) ?? null;
+    // Save to Redis as a hash
+    await client.hSet(`brief:${id}`, {
+      id,
+      category,
+      data: JSON.stringify(data),
+      createdAt: now.toISOString(),
+      updatedAt: now.toISOString(),
+    });
+
+    // Add to category index
+    await client.sAdd(`category:${category}`, `brief:${id}`);
+
+    // Add to time-sorted index
+    await client.zAdd("briefs:by_time", {
+      score: now.getTime(),
+      value: `brief:${id}`,
+    });
+
+    return briefing;
+  } catch (error) {
+    console.error("Error creating briefing:", error);
+    return null;
+  }
 }
 
 /**
@@ -76,9 +94,37 @@ export async function createBriefing(
  * @returns The found briefing or null
  */
 export async function getBriefingById(id: string): Promise<Briefing | null> {
-  const result = await db.select().from(briefings).where(eq(briefings.id, id));
+  try {
+    const client = await getRedisClient();
 
-  return (result[0] as Briefing | undefined) ?? null;
+    // Get the briefing hash
+    const briefingData = await client.hGetAll(`brief:${id}`);
+
+    // If no data was found, return null
+    if (!Object.keys(briefingData).length) {
+      return null;
+    }
+
+    // Parse the JSON data and timestamps
+    const parsedData = JSON.parse(briefingData.data ?? "{}");
+    const createdAt = new Date(
+      briefingData.createdAt ?? new Date().toISOString()
+    );
+    const updatedAt = new Date(
+      briefingData.updatedAt ?? new Date().toISOString()
+    );
+
+    return {
+      id: briefingData.id,
+      category: briefingData.category,
+      data: parsedData,
+      createdAt,
+      updatedAt,
+    };
+  } catch (error) {
+    console.error("Error getting briefing:", error);
+    return null;
+  }
 }
 
 /**
@@ -91,16 +137,48 @@ export async function updateBriefing(
   id: string,
   data: BriefingData
 ): Promise<Briefing | null> {
-  // Use raw SQL for updating to handle the updated_at field correctly
-  const result = await db.execute(
-    sql`UPDATE briefings SET data = ${JSON.stringify(
-      data
-    )}, updated_at = CURRENT_TIMESTAMP WHERE id = ${id} RETURNING *`
-  );
+  try {
+    const client = await getRedisClient();
 
-  // Convert result to a strongly typed array
-  const rows = result as unknown as Array<Record<string, unknown>>;
-  return rows.length > 0 ? (rows[0] as unknown as Briefing) : null;
+    // Check if the briefing exists
+    const exists = await client.exists(`brief:${id}`);
+    if (!exists) {
+      return null;
+    }
+
+    // Get the current briefing data
+    const currentBriefing = await getBriefingById(id);
+    if (!currentBriefing) {
+      return null;
+    }
+
+    // Update only the data and updatedAt fields
+    const now = new Date();
+
+    // Update Redis hash
+    await client.hSet(`brief:${id}`, {
+      data: JSON.stringify(data),
+      updatedAt: now.toISOString(),
+    });
+
+    // Return the updated briefing
+    return {
+      ...currentBriefing,
+      data,
+      updatedAt: now,
+    };
+  } catch (error) {
+    console.error("Error updating briefing:", error);
+    return null;
+  }
 }
 
-export { db };
+// Function to cleanly shut down the Redis client
+export async function closeRedisConnection() {
+  if (redisClient?.isOpen) {
+    await redisClient.quit();
+  }
+}
+
+// Export the redis client for direct access if needed
+export { redisClient as redis };

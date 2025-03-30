@@ -21,6 +21,23 @@ type PageProps = {
   }>;
 };
 
+// Helper function to create fetch options with API key
+const apiOptions = (method: string, body?: Record<string, unknown>) => {
+  const options: RequestInit = {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": process.env.NEXT_PUBLIC_API_KEY || "",
+    },
+  };
+
+  if (body) {
+    options.body = JSON.stringify(body);
+  }
+
+  return options;
+};
+
 export default function PreviewPage({ params }: PageProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -367,18 +384,15 @@ export default function PreviewPage({ params }: PageProps) {
         setIsSaving(true);
         const parsedAnswers = JSON.parse(savedAnswers);
 
-        const response = await fetch(`/api/briefings?uuid=${briefingId}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+        const response = await fetch(
+          `/api/briefings?uuid=${briefingId}`,
+          apiOptions("PUT", {
             data: {
               answers: parsedAnswers,
               markdown: newMarkdown,
             },
-          }),
-        });
+          })
+        );
 
         // Only remove the link if we get a 404 AND the current shareableLink matches this briefingId
         // This prevents the link from disappearing if we're just editing
@@ -422,18 +436,15 @@ export default function PreviewPage({ params }: PageProps) {
 
       if (briefingId) {
         // Try to update existing briefing
-        const response = await fetch(`/api/briefings?uuid=${briefingId}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+        const response = await fetch(
+          `/api/briefings?uuid=${briefingId}`,
+          apiOptions("PUT", {
             data: {
               answers: parsedAnswers,
               markdown: markdownContent,
             },
-          }),
-        });
+          })
+        );
 
         if (response.ok) {
           // Ensure the shareableLink is set/maintained after a successful update
@@ -460,19 +471,16 @@ export default function PreviewPage({ params }: PageProps) {
 
   // Helper function to create a new briefing
   const createNewBriefing = async (parsedAnswers: Record<string, unknown>) => {
-    const response = await fetch("/api/briefings", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    const response = await fetch(
+      "/api/briefings",
+      apiOptions("POST", {
         category: templateId,
         data: {
           answers: parsedAnswers,
           markdown: markdownContent,
         },
-      }),
-    });
+      })
+    );
 
     if (response.ok) {
       const data = await response.json();

@@ -16,6 +16,14 @@ export async function POST(request: NextRequest) {
     }
 
     const briefing = await createBriefing(category, data);
+
+    if (!briefing) {
+      return NextResponse.json(
+        { error: "Failed to create briefing - database error" },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json(briefing, { status: 201 });
   } catch (error) {
     console.error("Error creating briefing:", error);
