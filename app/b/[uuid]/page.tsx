@@ -5,6 +5,13 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useParams } from "next/navigation";
+import PdfExportWithTooltip from "@/components/briefing/PdfExportWithTooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // Create a client component without using the params prop directly
 const SharedBriefPage = () => {
@@ -189,32 +196,83 @@ const SharedBriefPage = () => {
               <h1 className="text-2xl font-bold text-white flex-grow">
                 {briefTitle}
               </h1>
-              <Button
-                variant="default"
-                size="icon"
-                className="bg-yellow-400 text-black hover:bg-yellow-500 h-9 w-9"
-                onClick={() => {
-                  navigator.clipboard.writeText(markdownContent);
-                  toast.success("Markdown copied to clipboard!");
-                }}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <title>Copy icon</title>
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
-                  />
-                </svg>
-              </Button>
+              <div className="flex gap-2">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="default"
+                        size="icon"
+                        className="bg-yellow-400 text-black hover:bg-yellow-500 h-9 w-9"
+                        onClick={() => {
+                          // Copy the current URL to clipboard
+                          navigator.clipboard.writeText(window.location.href);
+                          toast.success("Link copied to clipboard!");
+                        }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          aria-hidden="true"
+                        >
+                          <title>Copy link icon</title>
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                          />
+                        </svg>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Copy link to clipboard</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="default"
+                        size="icon"
+                        className="bg-yellow-400 text-black hover:bg-yellow-500 h-9 w-9"
+                        onClick={() => {
+                          navigator.clipboard.writeText(markdownContent);
+                          toast.success("Markdown copied to clipboard!");
+                        }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          aria-hidden="true"
+                        >
+                          <title>Copy icon</title>
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+                          />
+                        </svg>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Copy markdown to clipboard</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <PdfExportWithTooltip
+                  markdown={markdownContent}
+                  title={briefTitle}
+                />
+              </div>
             </div>
 
             <div className="p-6 pt-4">
@@ -276,6 +334,32 @@ const SharedBriefPage = () => {
 
                   if (line.trim() === "") {
                     return <div key={key} className="h-2" />;
+                  }
+
+                  // Process inline bold text with pattern **text**
+                  if (line.includes("**")) {
+                    // Split by ** and render with proper formatting
+                    const parts = line.split(/(\*\*.*?\*\*)/g);
+                    return (
+                      <p key={key} className="my-2 text-zinc-300">
+                        {parts.map((part, i) => {
+                          const partKey = `${key}-part-${i}-${part
+                            .substring(0, 10)
+                            .replace(/\s+/g, "-")}`;
+                          if (part.startsWith("**") && part.endsWith("**")) {
+                            return (
+                              <strong
+                                key={partKey}
+                                className="font-bold text-zinc-100"
+                              >
+                                {part.substring(2, part.length - 2)}
+                              </strong>
+                            );
+                          }
+                          return <span key={partKey}>{part}</span>;
+                        })}
+                      </p>
+                    );
                   }
 
                   return (

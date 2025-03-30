@@ -7,6 +7,7 @@ import { getTemplateById } from "@/lib/data/templates";
 import { getQuestionnaireByTemplateId } from "@/lib/data/questionnaire";
 import { Button } from "@/components/ui/button";
 import EditablePreview from "@/components/briefing/EditablePreview";
+import PdfExportWithTooltip from "@/components/briefing/PdfExportWithTooltip";
 import { toast } from "sonner";
 import {
   Tooltip,
@@ -477,12 +478,6 @@ const PreviewPage = () => {
     }
   };
 
-  // Handle PDF export
-  const handleExport = () => {
-    // In a real app, you would implement PDF export here
-    toast.error("PDF export not available yet");
-  };
-
   if (isLoading) {
     return (
       <div className="container mx-auto px-6 py-8">
@@ -693,36 +688,10 @@ const PreviewPage = () => {
                 </TooltipContent>
               </Tooltip>
 
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="default"
-                    size="icon"
-                    className="bg-yellow-400 text-black hover:bg-yellow-500 h-9 w-9"
-                    onClick={handleExport}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <title>Export PDF icon</title>
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                      />
-                    </svg>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Export PDF</p>
-                </TooltipContent>
-              </Tooltip>
+              <PdfExportWithTooltip
+                markdown={markdownContent}
+                title={template ? `${template.title} Brief` : "Brief"}
+              />
             </div>
           </div>
 

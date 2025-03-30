@@ -17,7 +17,7 @@
 3. ✅ **Secure Data Storage** using Redis instead of the originally planned [Neon Postgres](https://neon.tech/) and [Drizzle ORM](https://orm.drizzle.team/).
 4. ✅ **Preview & Edit** capabilities for final touches.
 5. ✅ **Shareable Link** with optional privacy settings.
-6. ❌ **PDF Export** with optional branding (logo, color themes, etc.).
+6. ✅ **PDF Export** with optional branding (logo, color themes, etc.).
 7. ❌ **Premium Upgrades** for multi-user collaboration, advanced export formats, and custom branding.
 
 ---
@@ -45,7 +45,7 @@
 3. ✅ **Auto-Save & Data Storage** with UUID-based records in Redis (instead of Neon Postgres).
 4. ✅ **Markdown Briefing** automatically generated from the user's inputs.
 5. ✅ **Preview & Edit** the briefing.
-6. ❌ **Export** to PDF or other formats.
+6. ✅ **Export** to PDF or other formats.
 7. ✅ **Share Link** (UUID-based, no login required).
 
 ---
@@ -199,31 +199,31 @@ https://brieffa.st/b/<UUID>
 
 ### 5.5 PDF Export
 
-- **Description:** Export briefings to a PDF file using either jsPDF or html2pdf.js.
+- **Description:** Export briefings to a PDF file using jsPDF.
 - **Functional Requirements:**
 
-  1. ❌ **One-Click PDF Export:**
+  1. ✅ **One-Click PDF Export:**
      - Optionally include custom branding (logo, fonts, colors).
-  2. ❌ **Auto-Pagination:**
+  2. ✅ **Auto-Pagination:**
      - Long documents split into multiple pages with headers/footers.
-  3. ❌ **Selective Sections:**
+  3. ✅ **Selective Sections:**
      - Allow users to exclude certain optional sections before export.
-  4. ❌ **Dark Mode Support:**
+  4. ✅ **Dark Mode Support:**
      - If the user's system is in dark mode, give them the option to preserve dark mode in the PDF.
 
 - **Example Code Snippet (for illustration only):**
 
 ```javascript
-// Using html2pdf.js
-const element = document.getElementById("briefing-preview");
-const opt = {
-  margin: 1,
-  filename: "briefing.pdf",
-  image: { type: "jpeg", quality: 0.98 },
-  html2canvas: {},
-  jsPDF: { orientation: "portrait" },
-};
-html2pdf().from(element).set(opt).save();
+// Using jsPDF
+const doc = new jsPDF({
+  orientation: "portrait",
+  unit: "mm",
+  format: "a4",
+});
+// Set text color, format headings, etc.
+doc.text(title, 20, 20);
+// Add content, headers, footers
+doc.save("briefing.pdf");
 ```
 
 ### 5.6 Premium Features
@@ -251,7 +251,7 @@ html2pdf().from(element).set(opt).save();
 - ✅ **UI Components:** ShadCN UI
 - ✅ **State Management:** React Context or Zustand
 - ❌ **Database:** Neon Postgres with Drizzle ORM (Using Redis instead)
-- ❌ **PDF Generation:** jsPDF or html2pdf.js
+- ✅ **PDF Generation:** jsPDF
 - ✅ **Hosting:** Vercel
 
 ---
@@ -391,7 +391,7 @@ Below is a proposed minimal file structure for the Next.js 15 application with D
 
 1. ❌ **Data Privacy:** Must handle personal or sensitive project details responsibly (encryption, row-level security).
 2. ✅ **Scalability:** Potential high concurrency if many users generate PDFs simultaneously (may require optimized serverless function or caching).
-3. ❌ **PDF Generation:** Large or media-heavy briefs might require careful pagination and performance checks.
+3. ✅ **PDF Generation:** Large or media-heavy briefs might require careful pagination and performance checks.
 4. ✅ **Questionnaire Logic Complexity:** As the number of categories grows, maintaining dynamic logic for questions might become complex (modular design recommended).
 
 ---
@@ -422,7 +422,7 @@ Below is a proposed minimal file structure for the Next.js 15 application with D
 - ❌ **Drizzle ORM Documentation:** https://orm.drizzle.team/
 - ✅ **Tailwind CSS Docs:** https://tailwindcss.com/docs
 - ✅ **ShadCN UI:** https://ui.shadcn.com/
-- ❌ **jsPDF:** https://github.com/parallax/jsPDF
+- ✅ **jsPDF:** https://github.com/parallax/jsPDF
 - ❌ **html2pdf.js:** https://ekoeryanto.github.io/html2pdf.js/
 - ❌ **Neon Postgres:** https://neon.tech/
 
