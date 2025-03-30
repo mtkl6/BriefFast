@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { use } from "react";
 import { getTemplateById } from "@/lib/data/templates";
 import { getQuestionnaireByTemplateId } from "@/lib/data/questionnaire";
 import { Button } from "@/components/ui/button";
@@ -15,39 +14,16 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-type PageProps = {
-  params: Promise<{
-    templateId: string;
-  }>;
-};
-
-// Helper function to create fetch options with API key
-const apiOptions = (method: string, body?: Record<string, unknown>) => {
-  const options: RequestInit = {
-    method,
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": process.env.NEXT_PUBLIC_API_KEY || "",
-    },
-  };
-
-  if (body) {
-    options.body = JSON.stringify(body);
-  }
-
-  return options;
-};
-
-export default function PreviewPage({ params }: PageProps) {
+// Use a client component that gets params from useParams hook
+const PreviewPage = () => {
   const router = useRouter();
+  const params = useParams();
+  const templateId = params.templateId as string;
+
   const [isLoading, setIsLoading] = useState(true);
   const [markdownContent, setMarkdownContent] = useState("");
   const [shareableLink, setShareableLink] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-
-  // Unwrap params Promise with use()
-  const unwrappedParams = use(params);
-  const templateId = unwrappedParams.templateId;
 
   const template = getTemplateById(templateId);
   const questionnaire = getQuestionnaireByTemplateId(templateId);
@@ -777,4 +753,23 @@ export default function PreviewPage({ params }: PageProps) {
       </div>
     </div>
   );
-}
+};
+
+export default PreviewPage;
+
+// Helper function to create fetch options with API key
+const apiOptions = (method: string, body?: Record<string, unknown>) => {
+  const options: RequestInit = {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": process.env.NEXT_PUBLIC_API_KEY || "",
+    },
+  };
+
+  if (body) {
+    options.body = JSON.stringify(body);
+  }
+
+  return options;
+};

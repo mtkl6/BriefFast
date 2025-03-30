@@ -2,25 +2,19 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { use } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useParams } from "next/navigation";
 
-type PageProps = {
-  params: Promise<{
-    uuid: string;
-  }>;
-};
+// Create a client component without using the params prop directly
+const SharedBriefPage = () => {
+  const params = useParams();
+  const uuid = params.uuid as string;
 
-export default function SharedBriefPage({ params }: PageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [markdownContent, setMarkdownContent] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [briefTitle, setBriefTitle] = useState<string>("Shared Brief");
-
-  // Unwrap params Promise with use()
-  const unwrappedParams = use(params);
-  const uuid = unwrappedParams.uuid;
 
   // Load brief from database
   useEffect(() => {
@@ -312,4 +306,6 @@ export default function SharedBriefPage({ params }: PageProps) {
       </div>
     </div>
   );
-}
+};
+
+export default SharedBriefPage;

@@ -4,14 +4,11 @@ import { getTemplateById } from "@/lib/data/templates";
 import { MovingBorderButton } from "@/components/ui/moving-border-button";
 import { Button } from "@/components/ui/button";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { templateId: string };
+export async function generateMetadata(props: {
+  params: Promise<{ templateId: string }>;
 }) {
-  // In a real app, you might fetch this data from an API or database
-  const params_awaited = await params;
-  const templateId = params_awaited.templateId;
+  const params = await props.params;
+  const templateId = params.templateId;
   const template = getTemplateById(templateId);
 
   if (!template) {
@@ -28,14 +25,11 @@ export async function generateMetadata({
   };
 }
 
-export default async function TemplatePage({
-  params,
-}: {
-  params: { templateId: string };
+export default async function TemplatePage(props: {
+  params: Promise<{ templateId: string }>;
 }) {
-  // In a real app, you might fetch this data from an API or database
-  const params_awaited = await params;
-  const templateId = params_awaited.templateId;
+  const params = await props.params;
+  const templateId = params.templateId;
   const template = getTemplateById(templateId);
 
   if (!template) {
@@ -58,7 +52,9 @@ export default async function TemplatePage({
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
+              aria-hidden="true"
             >
+              <title>Back arrow</title>
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -102,7 +98,9 @@ export default async function TemplatePage({
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                aria-hidden="true"
               >
+                <title>Checkmark</title>
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -121,7 +119,9 @@ export default async function TemplatePage({
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                aria-hidden="true"
               >
+                <title>Checkmark</title>
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -140,7 +140,9 @@ export default async function TemplatePage({
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                aria-hidden="true"
               >
+                <title>Checkmark</title>
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"

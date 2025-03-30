@@ -1,9 +1,9 @@
 import * as React from "react";
 import Link from "next/link";
-import { Metadata } from "next";
+import type { Metadata } from "next/types";
 
 export const metadata: Metadata = {
-  title: `Terms and Conditions | Doslint`,
+  title: "Terms and Conditions | Brieffast",
   alternates: {
     canonical: "/tos",
   },
