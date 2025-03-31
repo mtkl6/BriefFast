@@ -80,7 +80,7 @@ export default function PrivacyPolicy(): React.ReactElement {
               </p>
               <ul>
                 <li>Create and save briefs on our platform</li>
-                <li>Use or view our website via your browser's cookies</li>
+                <li>Use or view our website via your browser&apos;s cookies</li>
               </ul>
 
               <h2>How will we use your data?</h2>
@@ -102,7 +102,7 @@ export default function PrivacyPolicy(): React.ReactElement {
 
               <h2>Contact</h2>
               <p>
-                If you have any questions about BriefFast's privacy policy,
+                If you have any questions about BriefFast&apos;s privacy policy,
                 please contact us at support@brieffast.app.
               </p>
             </div>
