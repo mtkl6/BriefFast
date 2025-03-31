@@ -12,12 +12,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { TrackSharedBriefView } from "@/app/components/tracking/BriefTracking";
 
 // Create a client component without using the params prop directly
 const SharedBriefPage = () => {
   const params = useParams();
   const uuid = params.uuid as string;
-
   const [isLoading, setIsLoading] = useState(true);
   const [markdownContent, setMarkdownContent] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -153,7 +153,10 @@ const SharedBriefPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-900">
+    <div className="min-h-screen bg-zinc-900 text-white">
+      {/* Track shared brief view */}
+      <TrackSharedBriefView briefId={uuid} />
+
       <div className="container mx-auto px-6 py-8">
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center justify-between mb-8">
