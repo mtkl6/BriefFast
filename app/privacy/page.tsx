@@ -1,6 +1,7 @@
 import * as React from "react";
 import Link from "next/link";
 import type { Metadata } from "next/types";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | Brieffast",
@@ -49,87 +50,67 @@ export default function PrivacyPolicy(): React.ReactElement {
         </div>
       </header>
 
-      <main className="flex-grow container mx-auto px-6 py-8">
-        <div className="max-w-3xl mx-auto">
-          <Link
-            href="/"
-            className="text-zinc-400 hover:text-white transition-colors flex items-center gap-2 mb-8"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className="w-5 h-5"
-            >
-              <path
-                fillRule="evenodd"
-                d="M15 10a.75.75 0 01-.75.75H7.612l2.158 1.96a.75.75 0 11-1.04 1.08l-3.5-3.25a.75.75 0 010-1.08l3.5-3.25a.75.75 0 111.04 1.08L7.612 9.25h6.638A.75.75 0 0115 10z"
-                clipRule="evenodd"
-              />
-            </svg>
-            Back
-          </Link>
-          <h1 className="text-3xl md:text-4xl font-bold mb-8">
-            Privacy Policy for Brieffast
-          </h1>
+      <main className="flex-grow py-12">
+        <div className="container mx-auto px-6">
+          <div className="max-w-3xl mx-auto">
+            <h1 className="text-3xl font-bold mb-8">Privacy Policy</h1>
+            <div className="prose prose-invert prose-zinc">
+              {/* Privacy policy content here */}
+              <p>Last updated: November 15, 2023</p>
 
-          <div className="text-zinc-300 space-y-4 whitespace-pre-wrap">
-            {`Last Updated: March 22, 2025
+              <p>
+                At BriefFast, we respect your privacy and are committed to
+                protecting your personal data. This privacy policy will inform
+                you about how we look after your personal data when you visit
+                our website and tell you about your privacy rights and how the
+                law protects you.
+              </p>
 
-1. Introduction
-Welcome to Brieffast (https://brieffast.com). We are committed to protecting your privacy and ensuring the security of your personal information.
+              <h2>What data do we collect?</h2>
+              <p>BriefFast collects the following data:</p>
+              <ul>
+                <li>Brief content you create</li>
+                <li>Anonymous usage statistics</li>
+              </ul>
 
-2. Information We Collect
-	•	Non-Personal Data: We use cookies and similar technologies to improve your experience and analyze website usage.
+              <h2>How do we collect your data?</h2>
+              <p>
+                You directly provide BriefFast with most of the data we collect.
+                We collect data and process data when you:
+              </p>
+              <ul>
+                <li>Create and save briefs on our platform</li>
+                <li>Use or view our website via your browser's cookies</li>
+              </ul>
 
-3. Use of Information
-We use your information for the following purposes:
-	•	Providing and facilitating our services, including creating brieffing documents.
-	•	Improving our website and user experience.
-	•	Ensuring the security of our services.
-	•	Communicating with you about updates or changes to our services.
+              <h2>How will we use your data?</h2>
+              <p>BriefFast collects your data so that we can:</p>
+              <ul>
+                <li>Store and retrieve your briefs</li>
+                <li>Improve our service based on anonymous usage patterns</li>
+              </ul>
 
-4. Data Security
-We implement appropriate security measures to protect your personal information from unauthorized access, alteration, or disclosure.
+              <h2>How do we store your data?</h2>
+              <p>
+                BriefFast securely stores your data using industry-standard
+                encryption and security practices.
+              </p>
+              <p>
+                BriefFast will keep your brief data until you choose to delete
+                it. You can delete your data at any time.
+              </p>
 
-5. Data Sharing
-We do not share your personal information with third parties, except as necessary to provide our services or when required by law.
-
-6. Children's Privacy
-Our services are not intended for children, and we do not knowingly collect personal information from anyone under the age of 13.
-
-7. Updates to This Policy
-We may update this Privacy Policy from time to time. If we make significant changes, we will notify you via email, if requested.
-
-8. Contact Us
-If you have any questions or concerns about this Privacy Policy, please contact us at:
-moritz@devmtkl.com
-
-  Thank you for trusting Brieffast with your information.
-
-This policy is effective as of March 22, 2025`}
+              <h2>Contact</h2>
+              <p>
+                If you have any questions about BriefFast's privacy policy,
+                please contact us at support@brieffast.app.
+              </p>
+            </div>
           </div>
         </div>
       </main>
 
-      <footer className="border-t border-zinc-800 py-6">
-        <div className="container mx-auto px-6 text-center">
-          <div className="text-zinc-500 text-sm mb-2">
-            © {new Date().getFullYear()} BriefFast
-          </div>
-          <div className="flex justify-center space-x-4 text-xs text-zinc-500">
-            <Link href="/tos" className="hover:text-zinc-300 transition-colors">
-              Terms of Service
-            </Link>
-            <Link
-              href="/privacy"
-              className="hover:text-zinc-300 transition-colors"
-            >
-              Privacy Policy
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

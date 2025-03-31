@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { TemplateGrid } from "@/components/TemplateGrid";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -42,53 +44,29 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex-grow flex items-center">
-        <div className="container mx-auto px-6 py-16">
-          <div className="max-w-3xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight">
-              Create your brief <br />
-              in <span className="text-white">days</span>,{" "}
-              <span className="bg-zinc-800 px-3 py-1">not weeks</span>
+      <main className="flex-grow py-12">
+        <div className="container mx-auto px-6">
+          <div className="max-w-3xl mx-auto text-center mb-12">
+            <h1 className="text-4xl font-bold mb-4">
+              Create project briefs in minutes, not hours
             </h1>
-
-            <p className="text-lg text-zinc-400 mb-8 max-w-2xl">
-              The BriefFast boilerplate with all you need to build your project
-              brief. Generate structured, detailed project briefings in minutes.
+            <p className="text-xl text-zinc-400 mb-8">
+              BriefFast helps tech professionals and creative teams create
+              detailed project briefs with guided templates.
             </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 mb-12">
-              <Link
-                href="/briefgen"
-                className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 px-8 rounded-lg transition-colors text-lg inline-flex items-center justify-center"
-              >
-                <span className="mr-2">⚡</span> Get Brieffast
-              </Link>
-              <div className="text-yellow-500 text-sm flex items-center sm:ml-4">
-                Brieffast is still a demo
-              </div>
-            </div>
+            <Link
+              href="/briefgen"
+              className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-2 px-6 rounded-lg transition-colors inline-flex items-center"
+            >
+              <span className="mr-2">⚡</span> Get Started
+            </Link>
           </div>
+
+          <TemplateGrid />
         </div>
       </main>
 
-      <footer className="border-t border-zinc-800 py-6">
-        <div className="container mx-auto px-6 text-center">
-          <div className="text-zinc-500 text-sm mb-2">
-            © {new Date().getFullYear()} Brieffast
-          </div>
-          <div className="flex justify-center space-x-4 text-xs text-zinc-500">
-            <Link href="/tos" className="hover:text-zinc-300 transition-colors">
-              Terms of Service
-            </Link>
-            <Link
-              href="/privacy"
-              className="hover:text-zinc-300 transition-colors"
-            >
-              Privacy Policy
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

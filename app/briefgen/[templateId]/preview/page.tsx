@@ -53,61 +53,628 @@ const PreviewPage = () => {
 
       // Project Basics
       markdown += "## Project Overview\n\n";
-      markdown += `**Project Name:** ${answers["project-name"] || "N/A"}\n\n`;
-      markdown += `**Project Description:**\n${
-        answers["project-description"] || "N/A"
-      }\n\n`;
 
-      // Add project type if available
-      if (answers["project-type"]) {
-        const projectType = answers["project-type"] as string;
-        markdown += `**Project Type:** ${projectType}`;
+      // Handle different templates with specific fields
+      if (templateId === "indie-tech-marketing") {
+        // Indie Tech Marketing fields - use campaign-specifics for both name and description
+        // Split the campaign specifics content into name (first line) and description (rest)
+        const campaignSpecifics =
+          (answers["campaign-specifics"] as string) || "";
+        const lines = campaignSpecifics
+          .split("\n")
+          .filter((line) => line.trim().length > 0);
 
-        // Add "other" specification if applicable
-        if (projectType === "other" && answers["project-type-other"]) {
-          markdown += ` - ${answers["project-type-other"]}`;
+        // Use first line as project name, or the whole text if it's just one line
+        const projectName = lines.length > 0 ? lines[0] : "N/A";
+
+        // Use remaining lines as description, or the whole text if it's substantial
+        const projectDescription =
+          lines.length > 1
+            ? lines.slice(1).join("\n")
+            : campaignSpecifics.length > 30
+            ? campaignSpecifics
+            : "N/A";
+
+        markdown += `**Project Name:** ${projectName}\n\n`;
+        markdown += `**Project Description:** ${projectDescription}\n\n`;
+
+        // Add campaign objective if available
+        if (answers["campaign-objective"]) {
+          const objectiveMap: Record<string, string> = {
+            launch: "Product/feature launch",
+            acquisition: "User/customer acquisition",
+            awareness: "Brand awareness",
+            leads: "Lead generation",
+            retention: "Retention/engagement",
+          };
+
+          markdown += `**Campaign Objective:** ${
+            objectiveMap[answers["campaign-objective"] as string] ||
+            answers["campaign-objective"]
+          }`;
+
+          // Add "other" specification if applicable
+          if (
+            answers["campaign-objective"] === "other" &&
+            answers["campaign-objective-other"]
+          ) {
+            markdown += ` - ${answers["campaign-objective-other"]}`;
+          }
+
+          markdown += "\n\n";
         }
 
-        markdown += "\n\n";
-      }
+        // Add campaign duration if available
+        if (answers["campaign-duration"]) {
+          const durationMap: Record<string, string> = {
+            "one-time": "One-time event/announcement",
+            short: "Short campaign (1-2 weeks)",
+            medium: "Medium campaign (2-4 weeks)",
+            extended: "Extended campaign (1-3 months)",
+            ongoing: "Ongoing/evergreen",
+          };
 
-      // Project Goals
-      markdown += "## Project Goals\n\n";
+          markdown += `**Campaign Duration:** ${
+            durationMap[answers["campaign-duration"] as string] ||
+            answers["campaign-duration"]
+          }\n\n`;
+        }
 
-      // Add primary goals if available
-      if (answers["primary-goals"] && Array.isArray(answers["primary-goals"])) {
-        markdown += "**Primary Goals:**\n\n";
+        // Project Goals section for marketing
+        markdown += "## Project Goals\n\n";
 
-        const goals = answers["primary-goals"] as string[];
-        for (const goal of goals) {
-          if (goal === "other") {
-            if (answers["primary-goals-other"]) {
-              markdown += `- ${answers["primary-goals-other"]}\n`;
+        // Add target audience if available
+        if (answers["target-audience"]) {
+          markdown += `**Target Audience:**\n\n${answers["target-audience"]}\n\n`;
+        }
+
+        // Add selling proposition if available
+        if (answers["selling-proposition"]) {
+          markdown += `**Unique Selling Proposition:**\n\n${answers["selling-proposition"]}\n\n`;
+        }
+
+        // Add call to action if available
+        if (answers["call-to-action"]) {
+          markdown += `**Call to Action:** ${answers["call-to-action"]}\n\n`;
+        }
+
+        // Add marketing strategy
+        markdown += "## Marketing Strategy\n\n";
+
+        // Add primary channel if available
+        if (answers["primary-channel"]) {
+          const channelMap: Record<string, string> = {
+            "product-hunt": "Product Hunt",
+            twitter: "Twitter/X",
+            linkedin: "LinkedIn",
+            reddit: "Reddit",
+            "hacker-news": "Hacker News",
+            "dev-communities": "Developer communities",
+            email: "Email newsletter",
+          };
+
+          markdown += `**Primary Channel:** ${
+            channelMap[answers["primary-channel"] as string] ||
+            answers["primary-channel"]
+          }`;
+
+          // Add "other" specification if applicable
+          if (
+            answers["primary-channel"] === "other" &&
+            answers["primary-channel-other"]
+          ) {
+            markdown += ` - ${answers["primary-channel-other"]}`;
+          }
+
+          markdown += "\n\n";
+        }
+
+        // Add secondary channels if available
+        if (
+          answers["secondary-channels"] &&
+          Array.isArray(answers["secondary-channels"])
+        ) {
+          markdown += "**Secondary Channels:**\n\n";
+
+          const channelMap: Record<string, string> = {
+            "product-hunt": "Product Hunt",
+            twitter: "Twitter/X",
+            linkedin: "LinkedIn",
+            reddit: "Reddit",
+            "hacker-news": "Hacker News",
+            "dev-communities": "Developer communities",
+            email: "Email newsletter",
+            network: "Personal network",
+            content: "Content marketing/blog",
+          };
+
+          const channels = answers["secondary-channels"] as string[];
+          for (const channel of channels) {
+            if (channel === "other") {
+              if (answers["secondary-channels-other"]) {
+                markdown += `- ${answers["secondary-channels-other"]}\n`;
+              }
+            } else {
+              markdown += `- ${channelMap[channel] || channel}\n`;
             }
-          } else {
-            const goalMap: Record<string, string> = {
-              "brand-awareness": "Increase brand awareness",
-              "lead-generation": "Generate leads",
-              sales: "Sell products/services",
-              information: "Provide information",
-              ux: "Improve user experience",
+          }
+
+          markdown += "\n";
+        }
+
+        // Add content assets if available
+        if (
+          answers["content-assets"] &&
+          Array.isArray(answers["content-assets"])
+        ) {
+          markdown += "**Content Assets Needed:**\n\n";
+
+          const assetMap: Record<string, string> = {
+            screenshots: "Product screenshots/demos",
+            video: "Explainer video",
+            testimonials: "Case studies/testimonials",
+            blog: "Blog post/announcement",
+            social: "Social media graphics",
+            "landing-page": "Landing page",
+            email: "Email templates",
+          };
+
+          const assets = answers["content-assets"] as string[];
+          for (const asset of assets) {
+            if (asset === "other") {
+              if (answers["content-assets-other"]) {
+                markdown += `- ${answers["content-assets-other"]}\n`;
+              }
+            } else {
+              markdown += `- ${assetMap[asset] || asset}\n`;
+            }
+          }
+
+          markdown += "\n";
+        }
+
+        // Add budget allocation if available
+        if (answers["budget-allocation"]) {
+          const budgetMap: Record<string, string> = {
+            "time-only": "Time only - no monetary budget",
+            minimal: "Minimal budget (<$500)",
+            moderate: "Moderate budget ($500-$2000)",
+            significant: "Significant budget (>$2000)",
+          };
+
+          markdown += `**Budget Allocation:** ${
+            budgetMap[answers["budget-allocation"] as string] ||
+            answers["budget-allocation"]
+          }\n\n`;
+        }
+
+        // Success metrics
+        markdown += "## Timeline & Budget\n\n";
+
+        // Add success metrics if available
+        if (
+          answers["success-metrics"] &&
+          Array.isArray(answers["success-metrics"])
+        ) {
+          markdown += "**Success Metrics:**\n\n";
+
+          const metricsMap: Record<string, string> = {
+            signups: "Signups/registrations",
+            traffic: "Website traffic",
+            engagement: "Social media engagement",
+            "product-hunt": "Product Hunt upvotes/ranking",
+            downloads: "Downloads/installations",
+            mentions: "Media/blog mentions",
+            revenue: "Direct revenue",
+          };
+
+          const metrics = answers["success-metrics"] as string[];
+          for (const metric of metrics) {
+            if (metric === "other") {
+              if (answers["success-metrics-other"]) {
+                markdown += `- ${answers["success-metrics-other"]}\n`;
+              }
+            } else {
+              markdown += `- ${metricsMap[metric] || metric}\n`;
+            }
+          }
+
+          markdown += "\n";
+        }
+
+        // Add target numbers if available
+        if (answers["target-numbers"]) {
+          markdown += `**Target Numbers:**\n\n${answers["target-numbers"]}\n\n`;
+        }
+
+        // Add follow up strategy if available
+        if (answers["follow-up-strategy"]) {
+          markdown += `**Follow-up Strategy:**\n\n${answers["follow-up-strategy"]}\n\n`;
+        }
+      } else if (templateId === "tech-content-strategy") {
+        // Tech Content Strategy fields
+
+        // Add an editable project name field with a default from content purpose
+        let projectName = (answers["custom-project-name"] as string) || "N/A";
+        if (!projectName || projectName === "N/A") {
+          const contentPurpose = answers["content-purpose"] as string;
+          if (contentPurpose) {
+            const purposeMap: Record<string, string> = {
+              leads: "Lead Generation Content Strategy",
+              authority: "Authority Building/Thought Leadership Strategy",
+              seo: "SEO/Organic Traffic Content Strategy",
+              education: "Customer Education Content Strategy",
+              community: "Community Building Content Strategy",
             };
 
-            markdown += `- ${goalMap[goal] || goal}\n`;
+            projectName = purposeMap[contentPurpose] || contentPurpose;
+
+            // Add "other" specification if applicable
+            if (
+              contentPurpose === "other" &&
+              answers["content-purpose-other"]
+            ) {
+              projectName = answers["content-purpose-other"] as string;
+            }
           }
         }
 
-        markdown += "\n";
-      }
+        // Use current status and topic areas for description
+        let projectDescription = "";
 
-      // Add target audience if available
-      if (answers["target-audience"]) {
-        markdown += `**Target Audience:**\n\n${answers["target-audience"]}\n\n`;
-      }
+        if (answers["current-status"]) {
+          const statusMap: Record<string, string> = {
+            none: "Starting from scratch (no content yet)",
+            limited: "Building on limited existing content",
+            moderate: "Improving moderate but inconsistent content",
+            extensive: "Enhancing extensive existing content",
+          };
 
-      // Add success metrics if available
-      if (answers["success-metrics"]) {
-        markdown += `**Success Metrics:**\n\n${answers["success-metrics"]}\n\n`;
+          projectDescription += `Current Content Status: ${
+            statusMap[answers["current-status"] as string] ||
+            answers["current-status"]
+          }\n\n`;
+        }
+
+        // Use topic-areas for content topics since content-topics doesn't exist
+        if (answers["topic-areas"]) {
+          projectDescription += `Primary Content Topics:\n${answers["topic-areas"]}\n`;
+        }
+
+        markdown += `**Project Name:** ${projectName}\n\n`;
+        markdown += `**Project Description:** ${
+          projectDescription || "N/A"
+        }\n\n`;
+
+        // Project Goals section
+        markdown += "## Project Goals\n\n";
+
+        // Add content purpose if available
+        if (answers["content-purpose"]) {
+          const purposeMap: Record<string, string> = {
+            leads: "Lead Generation",
+            authority: "Authority Building/Thought Leadership",
+            seo: "SEO/Organic Traffic",
+            education: "Customer Education/Support",
+            community: "Community Building",
+          };
+
+          markdown += `**Content Purpose:** ${
+            purposeMap[answers["content-purpose"] as string] ||
+            answers["content-purpose"]
+          }`;
+
+          // Add "other" specification if applicable
+          if (
+            answers["content-purpose"] === "other" &&
+            answers["content-purpose-other"]
+          ) {
+            markdown += ` - ${answers["content-purpose-other"]}`;
+          }
+
+          markdown += "\n\n";
+        }
+
+        // Add target audience if available
+        if (answers["target-audience"]) {
+          markdown += `**Target Audience:**\n\n${answers["target-audience"]}\n\n`;
+        }
+
+        // Use topic-areas instead of non-existent content-pillars
+        if (answers["topic-areas"]) {
+          markdown += `**Content Pillars/Themes:**\n\n${answers["topic-areas"]}\n\n`;
+        }
+
+        // Add content tone if available
+        if (answers["content-tone"]) {
+          const toneMap: Record<string, string> = {
+            technical: "Technical/Detailed",
+            educational: "Educational/Instructional",
+            conversational: "Conversational/Approachable",
+            professional: "Professional/Formal",
+            opinionated: "Opinionated/Thought-provoking",
+          };
+
+          markdown += `**Content Tone:** ${
+            toneMap[answers["content-tone"] as string] ||
+            answers["content-tone"]
+          }`;
+
+          // Add "other" specification if applicable
+          if (
+            answers["content-tone"] === "other" &&
+            answers["content-tone-other"]
+          ) {
+            markdown += ` - ${answers["content-tone-other"]}`;
+          }
+
+          markdown += "\n\n";
+        }
+
+        // Add content types if available
+        if (
+          answers["content-types"] &&
+          Array.isArray(answers["content-types"])
+        ) {
+          markdown += "**Content Types:**\n\n";
+
+          const typesMap: Record<string, string> = {
+            blog: "Technical blog posts/articles",
+            tutorials: "Tutorials/how-to guides",
+            video: "Video content",
+            code: "Code snippets/examples",
+            visual: "Infographics/visual content",
+            "case-studies": "Case studies",
+            podcast: "Podcasts/audio",
+            newsletter: "Newsletter",
+          };
+
+          const types = answers["content-types"] as string[];
+          for (const type of types) {
+            if (type === "other") {
+              if (answers["content-types-other"]) {
+                markdown += `- ${answers["content-types-other"]}\n`;
+              }
+            } else {
+              markdown += `- ${typesMap[type] || type}\n`;
+            }
+          }
+
+          markdown += "\n";
+        }
+
+        // Distribution section
+        markdown += "## Distribution Strategy\n\n";
+
+        // Content creation
+        if (answers["content-creation"]) {
+          const creationMap: Record<string, string> = {
+            self: "Self-created content",
+            mix: "Mix of self-created and outsourced content",
+            outsourced: "Primarily outsourced/delegated content",
+            collaborative: "Collaborative team/community content",
+          };
+
+          markdown += `**Content Creation Approach:** ${
+            creationMap[answers["content-creation"] as string] ||
+            answers["content-creation"]
+          }\n\n`;
+        }
+
+        // Add publishing frequency if available
+        if (answers["publishing-frequency"]) {
+          const frequencyMap: Record<string, string> = {
+            weekly: "Weekly",
+            "bi-weekly": "Bi-weekly",
+            monthly: "Monthly",
+            quarterly: "Quarterly",
+            irregular: "When valuable content is ready",
+          };
+
+          markdown += `**Publishing Frequency:** ${
+            frequencyMap[answers["publishing-frequency"] as string] ||
+            answers["publishing-frequency"]
+          }\n\n`;
+        }
+
+        // Add distribution channels instead of primary-platforms which doesn't exist
+        if (
+          answers["distribution-channels"] &&
+          Array.isArray(answers["distribution-channels"])
+        ) {
+          markdown += "**Distribution Channels:**\n\n";
+
+          const channelMap: Record<string, string> = {
+            "own-site": "Your own website/blog",
+            platforms: "Medium/dev.to/Hashnode",
+            twitter: "Twitter/X",
+            linkedin: "LinkedIn",
+            email: "Email newsletter",
+            youtube: "YouTube",
+            communities: "Reddit/HackerNews",
+          };
+
+          const channels = answers["distribution-channels"] as string[];
+          for (const channel of channels) {
+            if (channel === "other") {
+              if (answers["distribution-channels-other"]) {
+                markdown += `- ${answers["distribution-channels-other"]}\n`;
+              }
+            } else {
+              markdown += `- ${channelMap[channel] || channel}\n`;
+            }
+          }
+
+          markdown += "\n";
+        }
+
+        // Add community engagement strategy if available
+        if (
+          answers["community-engagement"] &&
+          Array.isArray(answers["community-engagement"])
+        ) {
+          markdown += "**Community Engagement Strategy:**\n\n";
+
+          const engagementMap: Record<string, string> = {
+            comments: "Responding to comments",
+            forums: "Participating in forums/discussions",
+            social: "Social media conversations",
+            creators: "Engaging with other creators' content",
+            events: "Community events/webinars",
+          };
+
+          const strategies = answers["community-engagement"] as string[];
+          for (const strategy of strategies) {
+            if (strategy === "other") {
+              if (answers["community-engagement-other"]) {
+                markdown += `- ${answers["community-engagement-other"]}\n`;
+              }
+            } else {
+              markdown += `- ${engagementMap[strategy] || strategy}\n`;
+            }
+          }
+
+          markdown += "\n";
+        }
+
+        // Success Measurement section
+        markdown += "## Success Measurement\n\n";
+
+        // Add success metrics if available
+        if (
+          answers["success-metrics"] &&
+          Array.isArray(answers["success-metrics"])
+        ) {
+          markdown += "**Success Metrics:**\n\n";
+
+          const metricsMap: Record<string, string> = {
+            views: "Page views/traffic",
+            subscribers: "Email subscribers",
+            social: "Social sharing/engagement",
+            leads: "Lead generation",
+            seo: "SEO rankings/backlinks",
+            community: "Community growth",
+            revenue: "Direct revenue",
+          };
+
+          const metrics = answers["success-metrics"] as string[];
+          for (const metric of metrics) {
+            if (metric === "other") {
+              if (answers["success-metrics-other"]) {
+                markdown += `- ${answers["success-metrics-other"]}\n`;
+              }
+            } else {
+              markdown += `- ${metricsMap[metric] || metric}\n`;
+            }
+          }
+
+          markdown += "\n";
+        }
+
+        // Add time allocation if available
+        if (answers["time-allocation"]) {
+          const timeMap: Record<string, string> = {
+            minimal: "Less than 2 hours/week",
+            low: "2-5 hours/week",
+            medium: "5-10 hours/week",
+            high: "10+ hours/week",
+          };
+
+          markdown += `**Weekly Time Allocation:** ${
+            timeMap[answers["time-allocation"] as string] ||
+            answers["time-allocation"]
+          }\n\n`;
+        }
+
+        // Add content repurposing if available
+        if (
+          answers["content-repurposing"] &&
+          Array.isArray(answers["content-repurposing"])
+        ) {
+          markdown += "**Content Repurposing Opportunities:**\n\n";
+
+          const repurposingMap: Record<string, string> = {
+            media: "Turn articles into videos/podcasts",
+            social: "Create social media snippets",
+            guides: "Compile content into guides/ebooks",
+            email: "Use content for email newsletters",
+            presentations: "Convert to presentations/talks",
+          };
+
+          const opportunities = answers["content-repurposing"] as string[];
+          for (const opportunity of opportunities) {
+            if (opportunity === "other") {
+              if (answers["content-repurposing-other"]) {
+                markdown += `- ${answers["content-repurposing-other"]}\n`;
+              }
+            } else {
+              markdown += `- ${repurposingMap[opportunity] || opportunity}\n`;
+            }
+          }
+
+          markdown += "\n";
+        }
+      } else {
+        // Default fields for other templates
+        markdown += `**Project Name:** ${answers["project-name"] || "N/A"}\n\n`;
+        markdown += `**Project Description:**\n${
+          answers["project-description"] || "N/A"
+        }\n\n`;
+
+        // Add project type if available
+        if (answers["project-type"]) {
+          const projectType = answers["project-type"] as string;
+          markdown += `**Project Type:** ${projectType}`;
+
+          // Add "other" specification if applicable
+          if (projectType === "other" && answers["project-type-other"]) {
+            markdown += ` - ${answers["project-type-other"]}`;
+          }
+
+          markdown += "\n\n";
+        }
+
+        // Project Goals
+        markdown += "## Project Goals\n\n";
+
+        // Add primary goals if available
+        if (
+          answers["primary-goals"] &&
+          Array.isArray(answers["primary-goals"])
+        ) {
+          markdown += "**Primary Goals:**\n\n";
+
+          const goals = answers["primary-goals"] as string[];
+          for (const goal of goals) {
+            if (goal === "other") {
+              if (answers["primary-goals-other"]) {
+                markdown += `- ${answers["primary-goals-other"]}\n`;
+              }
+            } else {
+              const goalMap: Record<string, string> = {
+                "brand-awareness": "Increase brand awareness",
+                "lead-generation": "Generate leads",
+                sales: "Sell products/services",
+                information: "Provide information",
+                ux: "Improve user experience",
+              };
+
+              markdown += `- ${goalMap[goal] || goal}\n`;
+            }
+          }
+
+          markdown += "\n";
+        }
+
+        // Add target audience if available
+        if (answers["target-audience"]) {
+          markdown += `**Target Audience:**\n\n${answers["target-audience"]}\n\n`;
+        }
+
+        // Add success metrics if available
+        if (answers["success-metrics"]) {
+          markdown += `**Success Metrics:**\n\n${answers["success-metrics"]}\n\n`;
+        }
       }
 
       // Technical Requirements (for web development)
@@ -341,12 +908,46 @@ const PreviewPage = () => {
     loadBrief();
   }, [templateId, router, generateMarkdown]);
 
+  // Create a custom project name extractor for all templates
+  const extractCustomProjectName = (markdown: string): string | null => {
+    const projectNameMatch = markdown.match(
+      /\*\*Project Name:\*\* (.*?)(?:\n\n|\n$)/
+    );
+    if (projectNameMatch && projectNameMatch[1]) {
+      return projectNameMatch[1].trim();
+    }
+    return null;
+  };
+
   // Handle markdown content changes with auto-save to existing briefing
   const handleMarkdownChange = async (newMarkdown: string) => {
     setMarkdownContent(newMarkdown);
 
     // Always save to localStorage
     localStorage.setItem(`brief_${templateId}_markdown`, newMarkdown);
+
+    // Extract project name from markdown if user changes it
+    // This allows the project name to persist even if the preview is regenerated
+    const customProjectName = extractCustomProjectName(newMarkdown);
+
+    if (customProjectName) {
+      // Get the stored answers
+      const savedAnswers = localStorage.getItem(`brief_${templateId}_final`);
+      if (savedAnswers) {
+        try {
+          const parsedAnswers = JSON.parse(savedAnswers);
+
+          // Save the custom project name for all templates
+          parsedAnswers["custom-project-name"] = customProjectName;
+          localStorage.setItem(
+            `brief_${templateId}_final`,
+            JSON.stringify(parsedAnswers)
+          );
+        } catch (error) {
+          console.error("Failed to update project name:", error);
+        }
+      }
+    }
 
     // Get the stored answers
     const savedAnswers = localStorage.getItem(`brief_${templateId}_final`);
