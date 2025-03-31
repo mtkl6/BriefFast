@@ -12,7 +12,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { TrackSharedBriefView } from "@/app/components/tracking/BriefTracking";
+import { trackEvent } from "@/app/utils/analytics";
 
 // Create a client component without using the params prop directly
 const SharedBriefPage = () => {
@@ -22,6 +22,33 @@ const SharedBriefPage = () => {
   const [markdownContent, setMarkdownContent] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [briefTitle, setBriefTitle] = useState<string>("Shared Brief");
+
+  // Direct tracking for shared brief view - more reliable than the component
+  useEffect(() => {
+    // Track the view with a small delay to ensure it runs after route change
+    const trackingTimeout = setTimeout(() => {
+      if (uuid) {
+        // Make each event unique by including the UUID in the event name
+        // This prevents deduplication by the tracking provider
+        const uniqueEventName = `shared_brief_viewed_${uuid.substring(0, 8)}`;
+
+        trackEvent(uniqueEventName, {
+          description: `Viewed shared brief: ${uuid}`,
+          briefId: uuid,
+          timestamp: new Date().toISOString(),
+          eventType: "shared_brief_viewed", // For consistent categorization
+        });
+        console.log(
+          "Tracked view for brief:",
+          uuid,
+          "with event:",
+          uniqueEventName
+        );
+      }
+    }, 100);
+
+    return () => clearTimeout(trackingTimeout);
+  }, [uuid]); // Re-run when uuid changes
 
   // Load brief from database
   useEffect(() => {
@@ -154,8 +181,7 @@ const SharedBriefPage = () => {
 
   return (
     <div className="min-h-screen bg-zinc-900 text-white">
-      {/* Track shared brief view */}
-      <TrackSharedBriefView briefId={uuid} />
+      {/* Removed TrackSharedBriefView - now tracking directly in useEffect */}
 
       <div className="container mx-auto px-6 py-8">
         <div className="max-w-3xl mx-auto">

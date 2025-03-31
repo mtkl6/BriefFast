@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { trackEvent } from "@/app/utils/analytics";
 
 interface CreationExitTrackingProps {
@@ -16,12 +17,37 @@ export default function CreationExitTracking({
 }: CreationExitTrackingProps) {
   const [startTime] = useState(new Date());
   const [hasSaved, setHasSaved] = useState(false);
+  const [isNavigatingToPreview, setIsNavigatingToPreview] = useState(false);
+  const pathname = usePathname();
 
-  // Mark as saved when the user completes the form
+  // Track successful completion via route change
+  useEffect(() => {
+    // Only run this once when component mounts
+    const handleBeforeUnload = () => {
+      // Only if the user is navigating to the preview page, mark as completed
+      const currentPath = window.location.pathname;
+      const previewPath = `/briefgen/${templateId}/preview`;
+
+      if (currentPath.includes(previewPath)) {
+        setIsNavigatingToPreview(true);
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [templateId]);
+
+  // Check if "Generate Brief" was clicked by watching for localStorage changes
   useEffect(() => {
     // Listen for storage events that indicate a successful save
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === `brief_${templateId}_id`) {
+      if (
+        e.key === `brief_${templateId}_id` ||
+        e.key === `brief_${templateId}_final`
+      ) {
         setHasSaved(true);
       }
     };
@@ -29,7 +55,10 @@ export default function CreationExitTracking({
     window.addEventListener("storage", handleStorageChange);
 
     // Check if already saved
-    if (localStorage.getItem(`brief_${templateId}_id`)) {
+    if (
+      localStorage.getItem(`brief_${templateId}_id`) ||
+      localStorage.getItem(`brief_${templateId}_final`)
+    ) {
       setHasSaved(true);
     }
 
@@ -37,7 +66,17 @@ export default function CreationExitTracking({
       window.removeEventListener("storage", handleStorageChange);
 
       // Only track exit if they started creation but didn't save
-      if (hasStartedCreation && !hasSaved) {
+      // AND they're not navigating to the preview page
+      const isPreviewPath = pathname.includes(
+        `/briefgen/${templateId}/preview`
+      );
+
+      if (
+        hasStartedCreation &&
+        !hasSaved &&
+        !isNavigatingToPreview &&
+        !isPreviewPath
+      ) {
         const timeSpentSeconds = Math.floor(
           (new Date().getTime() - startTime.getTime()) / 1000
         );
@@ -50,7 +89,15 @@ export default function CreationExitTracking({
         });
       }
     };
-  }, [templateId, hasStartedCreation, hasSaved, startTime, formProgress]);
+  }, [
+    templateId,
+    hasStartedCreation,
+    hasSaved,
+    startTime,
+    formProgress,
+    pathname,
+    isNavigatingToPreview,
+  ]);
 
   return null;
 }

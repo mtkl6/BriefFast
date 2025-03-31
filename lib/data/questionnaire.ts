@@ -2053,6 +2053,7 @@ export function shouldShowQuestion(
   question: Question,
   answers: Record<string, unknown>
 ): boolean {
+  // If no conditions, always show
   if (!question.conditions || question.conditions.length === 0) {
     return true;
   }
@@ -2060,43 +2061,122 @@ export function shouldShowQuestion(
   return question.conditions.every((condition) => {
     const answerValue = answers[condition.questionId];
 
+    // Special handling for empty or N/A values
     if (answerValue === undefined || answerValue === null) {
+      // If the condition is checking for empty/null/undefined, allow that
+      if (
+        condition.operator === "==" &&
+        (condition.value === null ||
+          condition.value === undefined ||
+          condition.value === "")
+      ) {
+        return true;
+      }
+      // If checking for not equal to a value, and we don't have a value, that's true
+      if (
+        condition.operator === "!=" &&
+        condition.value !== null &&
+        condition.value !== undefined
+      ) {
+        return true;
+      }
       return false;
     }
 
+    // Handle N/A as a string value specially
+    if (answerValue === "N/A" || answerValue === "n/a") {
+      // If checking if equal to N/A, return true
+      if (
+        condition.operator === "==" &&
+        (condition.value === "N/A" || condition.value === "n/a")
+      ) {
+        return true;
+      }
+      // If checking not equal to something else, return true
+      if (
+        condition.operator === "!=" &&
+        condition.value !== "N/A" &&
+        condition.value !== "n/a"
+      ) {
+        return true;
+      }
+      // For other operators, treat N/A as false
+      return false;
+    }
+
+    // Regular operators
     switch (condition.operator) {
       case "==":
         return answerValue === condition.value;
       case "!=":
         return answerValue !== condition.value;
       case "includes":
-        return (
-          Array.isArray(answerValue) && answerValue.includes(condition.value)
-        );
+        if (Array.isArray(answerValue)) {
+          return answerValue.includes(condition.value);
+        }
+        if (
+          typeof answerValue === "string" &&
+          typeof condition.value === "string"
+        ) {
+          return answerValue.includes(condition.value);
+        }
+        return false;
       case ">":
-        return (
+        if (
           typeof answerValue === "number" &&
-          typeof condition.value === "number" &&
-          answerValue > condition.value
-        );
+          typeof condition.value === "number"
+        ) {
+          return answerValue > condition.value;
+        }
+        if (
+          typeof answerValue === "string" &&
+          typeof condition.value === "string"
+        ) {
+          return answerValue > condition.value;
+        }
+        return false;
       case "<":
-        return (
+        if (
           typeof answerValue === "number" &&
-          typeof condition.value === "number" &&
-          answerValue < condition.value
-        );
+          typeof condition.value === "number"
+        ) {
+          return answerValue < condition.value;
+        }
+        if (
+          typeof answerValue === "string" &&
+          typeof condition.value === "string"
+        ) {
+          return answerValue < condition.value;
+        }
+        return false;
       case ">=":
-        return (
+        if (
           typeof answerValue === "number" &&
-          typeof condition.value === "number" &&
-          answerValue >= condition.value
-        );
+          typeof condition.value === "number"
+        ) {
+          return answerValue >= condition.value;
+        }
+        if (
+          typeof answerValue === "string" &&
+          typeof condition.value === "string"
+        ) {
+          return answerValue >= condition.value;
+        }
+        return false;
       case "<=":
-        return (
+        if (
           typeof answerValue === "number" &&
-          typeof condition.value === "number" &&
-          answerValue <= condition.value
-        );
+          typeof condition.value === "number"
+        ) {
+          return answerValue <= condition.value;
+        }
+        if (
+          typeof answerValue === "string" &&
+          typeof condition.value === "string"
+        ) {
+          return answerValue <= condition.value;
+        }
+        return false;
       default:
         return false;
     }
