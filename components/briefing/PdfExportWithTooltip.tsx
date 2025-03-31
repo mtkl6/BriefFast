@@ -21,6 +21,7 @@ import { Label } from "@/components/ui/label";
 import ThemeSelector from "./ThemeSelector";
 import { pdfThemes, hexToRgb } from "@/lib/pdf-themes";
 import type { PdfTheme } from "@/lib/pdf-themes";
+import { usePdfExportTracking } from "@/app/components/tracking/BriefTracking";
 
 interface PdfExportWithTooltipProps {
   markdown: string;
@@ -35,6 +36,7 @@ export default function PdfExportWithTooltip({
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState("light");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const trackPdfExport = usePdfExportTracking();
 
   // Detect system dark mode preference
   useEffect(() => {
@@ -418,6 +420,9 @@ export default function PdfExportWithTooltip({
         .replace(/[^a-z0-9]/gi, "-")
         .toLowerCase();
       doc.save(`${safeTitleForFilename}.pdf`);
+
+      // Track PDF export event using the hook
+      trackPdfExport(title);
 
       toast.success("PDF exported successfully!");
     } catch (error) {

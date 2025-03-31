@@ -14,6 +14,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useSaveBriefTracking } from "@/app/components/tracking/BriefTracking";
 
 // Use a client component that gets params from useParams hook
 const PreviewPage = () => {
@@ -25,6 +26,7 @@ const PreviewPage = () => {
   const [markdownContent, setMarkdownContent] = useState("");
   const [shareableLink, setShareableLink] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const trackSaveBrief = useSaveBriefTracking();
 
   const template = getTemplateById(templateId);
   const questionnaire = getQuestionnaireByTemplateId(templateId);
@@ -913,7 +915,7 @@ const PreviewPage = () => {
     const projectNameMatch = markdown.match(
       /\*\*Project Name:\*\* (.*?)(?:\n\n|\n$)/
     );
-    if (projectNameMatch && projectNameMatch[1]) {
+    if (projectNameMatch?.[1]) {
       return projectNameMatch[1].trim();
     }
     return null;
@@ -1068,6 +1070,9 @@ const PreviewPage = () => {
       // Create and set shareable link
       const newLink = `${window.location.origin}/b/${data.id}`;
       setShareableLink(newLink);
+
+      // Track save event using the hook
+      trackSaveBrief(data.id, templateId);
 
       // Copy link to clipboard
       await navigator.clipboard.writeText(newLink);

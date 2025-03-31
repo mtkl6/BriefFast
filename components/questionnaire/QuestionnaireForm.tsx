@@ -10,6 +10,8 @@ import type { Questionnaire } from "@/lib/data/questionnaire";
 import QuestionRenderer from "./QuestionRenderer";
 import StepIndicator from "./StepIndicator";
 import { Button } from "@/components/ui/button";
+import CreationExitTracking from "@/app/components/tracking/CreationExitTracking";
+import { useCreatedBriefTracking } from "@/app/components/tracking/BriefTracking";
 
 interface QuestionnaireFormProps {
   questionnaire: Questionnaire;
@@ -25,6 +27,8 @@ export default function QuestionnaireForm({
   const [answers, setAnswers] = useState<Record<string, unknown>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasStartedGeneration, setHasStartedGeneration] = useState(false);
+  const trackCreatedBrief = useCreatedBriefTracking();
 
   // Get the total number of steps
   const totalSteps = questionnaire.steps.length;
@@ -50,6 +54,13 @@ export default function QuestionnaireForm({
       }
     }
   }, [templateId]);
+
+  // Log when generation starts
+  useEffect(() => {
+    if (hasStartedGeneration) {
+      console.log("Brief generation started for template:", templateId);
+    }
+  }, [hasStartedGeneration, templateId]);
 
   // Save answers to localStorage whenever they change
   useEffect(() => {
@@ -163,11 +174,17 @@ export default function QuestionnaireForm({
         // For now, we'll just simulate a successful submission
         console.log("Form submitted with answers:", answers);
 
+        // Mark that generation has started
+        setHasStartedGeneration(true);
+
         // Save the final answers to localStorage
         localStorage.setItem(
           `brief_${templateId}_final`,
           JSON.stringify(answers)
         );
+
+        // Track brief creation event using the hook
+        trackCreatedBrief(templateId, questionnaire.title || "Brief");
 
         // Redirect to the preview page
         router.push(`/briefgen/${templateId}/preview`);
@@ -180,6 +197,13 @@ export default function QuestionnaireForm({
 
   return (
     <div className="bg-zinc-800 border border-zinc-700 rounded-lg p-6 mb-8">
+      {/* Add exit tracking */}
+      <CreationExitTracking
+        templateId={templateId}
+        hasStartedCreation={currentStep > 1 || Object.keys(answers).length > 0}
+        formProgress={Math.round((currentStep / totalSteps) * 100)}
+      />
+
       {/* Step Indicator */}
       <StepIndicator
         currentStep={currentStep}
