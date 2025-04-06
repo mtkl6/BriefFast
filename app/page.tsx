@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { TemplateGrid } from "@/components/TemplateGrid";
 import Footer from "@/components/Footer";
 
@@ -60,6 +61,22 @@ export default function Home() {
             >
               <span className="mr-2">⚡</span> Get Started
             </Link>
+
+            <div className="mt-8 flex justify-center">
+              <a
+                href="https://www.producthunt.com/posts/brieffast?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-brieffast"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=948866&theme=dark&t=1743923798013"
+                  alt="BriefFast - Get Briefing documents - on a easy way | Product Hunt"
+                  width={250}
+                  height={54}
+                  priority
+                />
+              </a>
+            </div>
           </div>
 
           <TemplateGrid />

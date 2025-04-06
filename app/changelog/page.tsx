@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Footer from "@/components/Footer";
+import { ChangelogSection } from "@/components/changelog/ChangelogSection";
 
 export default function Changelog() {
   return (
     <div className="min-h-screen flex flex-col bg-zinc-900 text-white">
-      <header className="border-b border-zinc-800">
+      <header className="border-b border-zinc-800 fixed top-0 left-0 right-0 bg-zinc-900/80 backdrop-blur-sm z-50">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center">
             <div className="flex items-center">
@@ -39,74 +40,41 @@ export default function Changelog() {
         </div>
       </header>
 
-      <main className="flex-grow py-12">
-        <div className="container mx-auto px-6">
-          <div className="max-w-3xl mx-auto">
-            <h1 className="text-3xl font-bold mb-8">Changelog</h1>
+      <main className="flex-grow">
+        <div className="container max-w-3xl mx-auto pt-32 pb-16 px-4">
+          <div className="mb-12 text-balance text-center">
+            <h1 className="mb-2 font-bold text-5xl">Changelog</h1>
+            <p className="text-lg text-zinc-400">
+              Keep track of what&apos;s new at BriefFast
+            </p>
+          </div>
 
-            <div className="space-y-12">
-              <div className="border-l-2 border-yellow-400 pl-6 space-y-6">
-                <div className="relative" id="changelog-2025-04-05">
-                  <div className="absolute -left-[49px] bg-zinc-900 p-2 rounded-full border-4 border-zinc-900">
-                    <div className="w-8 h-8 flex items-center justify-center rounded-full bg-yellow-400 text-black font-bold">
-                      1.0
-                    </div>
-                  </div>
-
-                  <div className="mb-2">
-                    <h2 className="text-xl font-bold mb-1">Initial Release</h2>
-                    <p className="text-zinc-400 text-sm">April 5, 2025</p>
-                  </div>
-
-                  <div className="text-zinc-300 space-y-3">
-                    <p>
-                      We&apos;re excited to launch BriefFast, a tool designed to
-                      simplify the creation of project briefs for tech
-                      professionals.
-                    </p>
-
-                    <h3 className="text-lg font-semibold mt-4">Features:</h3>
-                    <ul className="list-disc pl-6 space-y-1">
-                      <li>
-                        Six specialized brief templates for different project
-                        types
-                      </li>
-                      <li>Step-by-step guided questionnaires</li>
-                      <li>Export to PDF, Markdown, or shareable link</li>
-                      <li>Custom editing of generated briefs</li>
-                      <li>Mobile-responsive design</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div className="border-l-2 border-zinc-700 pl-6 space-y-6">
-                <div className="relative" id="changelog-roadmap">
-                  <div className="absolute -left-[49px] bg-zinc-900 p-2 rounded-full border-4 border-zinc-900">
-                    <div className="w-8 h-8 flex items-center justify-center rounded-full bg-zinc-700 text-zinc-300 font-bold">
-                      →
-                    </div>
-                  </div>
-
-                  <div className="mb-2">
-                    <h2 className="text-xl font-bold mb-1">Roadmap</h2>
-                    <p className="text-zinc-400 text-sm">Coming soon</p>
-                  </div>
-
-                  <div className="text-zinc-300 space-y-3">
-                    <p>Features we&apos;re working on for future releases:</p>
-
-                    <ul className="list-disc pl-6 space-y-1">
-                      <li>User accounts and brief management</li>
-                      <li>Collaboration features for team feedback</li>
-                      <li>More specialized templates</li>
-                      <li>AI-assisted brief generation</li>
-                      <li>Integration with project management tools</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="flex justify-center">
+            <ChangelogSection
+              items={[
+                {
+                  date: "2025-04-05",
+                  changes: [
+                    "🚀 Initial Release",
+                    "📝 Six specialized brief templates for different project types",
+                    "🎯 Step-by-step guided questionnaires",
+                    "💾 Export to PDF, Markdown, or shareable link",
+                    "✏️ Custom editing of generated briefs",
+                    "📱 Mobile-responsive design",
+                  ],
+                },
+                {
+                  date: "2025-04-03",
+                  changes: [
+                    "🔧 Fixed template loading issues on mobile devices",
+                    "📄 Resolved PDF export formatting problems",
+                    "✅ Improved form validation for required fields",
+                    "🌙 Fixed UI inconsistencies in dark mode",
+                    "♿️ Enhanced accessibility for screen readers",
+                  ],
+                },
+              ]}
+            />
           </div>
         </div>
       </main>
