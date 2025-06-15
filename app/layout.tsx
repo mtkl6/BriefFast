@@ -31,8 +31,10 @@ export default function RootLayout({
       <head>
         <Script
           defer
-          data-website-id="67eab5c5cadf3a1b5ad0ca2b"
-          data-domain="BriefFast.com"
+          // TODO: Add the correct analytics ID
+          data-website-id="ID"
+          // TODO: Add the correct domain
+          data-domain="DOMAIN"
           src="/js/script.js"
         />
       </head>
