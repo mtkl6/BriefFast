@@ -26,6 +26,14 @@ If you have existing data in PostgreSQL that you want to migrate to Redis, follo
    npm run migrate:redis
    ```
 
+## Analytics
+
+BriefFast uses [Datafast](https://datafa.st/) for analytics. To set up analytics:
+
+1. Create a Datafast account and get your website ID
+2. Update the `data-website-id` in `app/layout.tsx` with your website ID
+3. Update the `data-domain` in `app/layout.tsx` with your domain name
+
 ## Development
 
 First, run the development server:
